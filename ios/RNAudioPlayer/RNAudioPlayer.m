@@ -7,6 +7,8 @@
 #import <Foundation/Foundation.h>
 #import <MediaPlayer/MediaPlayer.h>
 
+#define contains(str1, str2) ([str1 rangeOfString: str2 ].location != NSNotFound)
+
 @interface RNAudioPlayer() {
     float duration;
     float trackDuration;
@@ -81,18 +83,18 @@ RCT_EXPORT_METHOD(play:(NSString *)url:(NSDictionary *) metadata) {
     // updating lock screen & control center
     [self setNowPlayingInfo:true];
     
+    NSURL *soundUrl;
+    
     if ( contains(url, @"http") )
     {
-        NSURL *soundUrl = [[NSURL alloc] initWithString:url];
-        self.playerItem = [AVPlayerItem playerItemWithURL:soundUrl];
+        soundUrl = [[NSURL alloc] initWithString:url];
     }
     else
     {
-        NSURL *soundLocalUrl = [[NSURL alloc] initFileURLWithPath:url];
-        self.playerItem = [AVPlayerItem playerItemWithURL:soundLocalUrl];
+        soundUrl = [[NSURL alloc] initFileURLWithPath:url];
     }
     
-    
+    self.playerItem = [AVPlayerItem playerItemWithURL:soundUrl];
     self.player = [AVPlayer playerWithPlayerItem:self.playerItem];
     
     // checking if iOS 10 or newer
@@ -105,7 +107,6 @@ RCT_EXPORT_METHOD(play:(NSString *)url:(NSDictionary *) metadata) {
     [self.playerItem addObserver:self forKeyPath:@"playbackLikelyToKeepUp" options:NSKeyValueObservingOptionNew context:nil];
     
     soundUrl = nil;
-    soundLocalUrl = nil;
 }
 
 RCT_EXPORT_METHOD(pause) {
@@ -430,3 +431,4 @@ RCT_EXPORT_METHOD(seekTo:(int) nSecond) {
 
 
 @end
+
