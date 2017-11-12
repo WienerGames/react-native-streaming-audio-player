@@ -81,8 +81,18 @@ RCT_EXPORT_METHOD(play:(NSString *)url:(NSDictionary *) metadata) {
     // updating lock screen & control center
     [self setNowPlayingInfo:true];
     
-    NSURL *soundUrl = [[NSURL alloc] initWithString:url];
-    self.playerItem = [AVPlayerItem playerItemWithURL:soundUrl];
+    if ( contains(url, @"http") )
+    {
+        NSURL *soundUrl = [[NSURL alloc] initWithString:url];
+        self.playerItem = [AVPlayerItem playerItemWithURL:soundUrl];
+    }
+    else
+    {
+        NSURL *soundLocalUrl = [[NSURL alloc] initFileURLWithPath:url];
+        self.playerItem = [AVPlayerItem playerItemWithURL:soundLocalUrl];
+    }
+    
+    
     self.player = [AVPlayer playerWithPlayerItem:self.playerItem];
     
     // checking if iOS 10 or newer
@@ -95,6 +105,7 @@ RCT_EXPORT_METHOD(play:(NSString *)url:(NSDictionary *) metadata) {
     [self.playerItem addObserver:self forKeyPath:@"playbackLikelyToKeepUp" options:NSKeyValueObservingOptionNew context:nil];
     
     soundUrl = nil;
+    soundLocalUrl = nil;
 }
 
 RCT_EXPORT_METHOD(pause) {
