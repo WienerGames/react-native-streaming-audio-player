@@ -33,7 +33,8 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.support.v7.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.media.app.NotificationCompat.MediaStyle;
 import android.util.Log;
 
 /**
@@ -278,9 +279,10 @@ public class MediaNotificationManager extends BroadcastReceiver {
         }
 
         notificationBuilder
-                .setStyle(new NotificationCompat.MediaStyle()
-                    .setShowActionsInCompactView(new int[]{playPauseButtonPosition})  // show only play/pause in compact view
-                    .setMediaSession(mSessionToken))
+                //  Commenting this fixes com.android.support:support:v7 not resolved issue 
+                // .setStyle(new NotificationCompat.MediaStyle()
+                //     .setShowActionsInCompactView(new int[]{playPauseButtonPosition})  // show only play/pause in compact view
+                //     .setMediaSession(mSessionToken))
                 .setColor(0xffdf533b)
                 .setSmallIcon(resId)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
